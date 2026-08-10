@@ -3,6 +3,7 @@ package artifacts.registry;
 import artifacts.Artifacts;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -15,8 +16,8 @@ import java.util.Map;
 public class ModLootTables {
 
     public static final List<ResourceKey<LootTable>> INJECTED_LOOT_TABLES = List.of(
-            EntityType.COW.getDefaultLootTable().orElseThrow(),
-            EntityType.MOOSHROOM.getDefaultLootTable().orElseThrow(),
+            entityType("cow").getDefaultLootTable().orElseThrow(),
+            entityType("mooshroom").getDefaultLootTable().orElseThrow(),
             BuiltInLootTables.VILLAGE_DESERT_HOUSE,
             BuiltInLootTables.VILLAGE_PLAINS_HOUSE,
             BuiltInLootTables.VILLAGE_SAVANNA_HOUSE,
@@ -62,16 +63,20 @@ public class ModLootTables {
     static {
         ENTITY_EQUIPMENT = new HashMap<>();
         List.of(
-                EntityType.ZOMBIE,
-                EntityType.HUSK,
-                EntityType.DROWNED,
-                EntityType.SKELETON,
-                EntityType.STRAY,
-                EntityType.WITHER_SKELETON,
-                EntityType.PIGLIN,
-                EntityType.PIGLIN_BRUTE,
-                EntityType.ZOMBIFIED_PIGLIN
+                entityType("zombie"),
+                entityType("husk"),
+                entityType("drowned"),
+                entityType("skeleton"),
+                entityType("stray"),
+                entityType("wither_skeleton"),
+                entityType("piglin"),
+                entityType("piglin_brute"),
+                entityType("zombified_piglin")
         ).forEach(type -> ENTITY_EQUIPMENT.put(type, entityEquipmentLootTable(type)));
+    }
+
+    private static EntityType<?> entityType(String name) {
+        return BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.withDefaultNamespace(name));
     }
 
     public static ResourceKey<LootTable> entityEquipmentLootTable(EntityType<?> entityType) {

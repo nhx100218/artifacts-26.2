@@ -21,6 +21,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.FluidTags;
@@ -60,7 +61,7 @@ public class ModItems {
                     .icon(() -> new ItemStack(ModItems.BUNNY_HOPPERS.value()))
                     .displayItems((itemDisplayParameters, output) -> ITEMS.forEach(output::accept))
                     .build()
-    );
+    ).holder();
 
     public static final Holder<Item> MIMIC_SPAWN_EGG = register("mimic_spawn_egg", SpawnEggItem::new,
             () -> new Item.Properties().spawnEgg(ModEntityTypes.MIMIC.get())
@@ -591,7 +592,7 @@ public class ModItems {
             .equipable(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().ambientSound())
             .durability(config.durability)
             .damageOnKill(config.durability.damagePerCreeperScared, registries -> registries.getOrThrow(ModTags.CREEPERS))
-            .damageOnKill(config.durability.damagePerPhantomScared, _ -> HolderSet.direct(EntityType.PHANTOM.builtInRegistryHolder()))
+            .damageOnKill(config.durability.damagePerPhantomScared, _ -> HolderSet.direct(BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.withDefaultNamespace("phantom")).builtInRegistryHolder()))
             .component(ModDataComponents.CREEPER_REPELLENT.get(), config.repelCreepers)
             .component(ModDataComponents.PHANTOM_REPELLENT.get(), config.repelPhantoms)
             .component(
@@ -683,6 +684,6 @@ public class ModItems {
     }
 
     private static Holder<Item> register(String name, Function<Item.Properties, ? extends Item> factory, Supplier<Item.Properties> properties) {
-        return ITEMS.register(name, () -> factory.apply(properties.get().setId(Artifacts.key(Registries.ITEM, name))));
+        return ITEMS.register(name, () -> factory.apply(properties.get().setId(Artifacts.key(Registries.ITEM, name)))).holder();
     }
 }

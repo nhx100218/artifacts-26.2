@@ -14,9 +14,9 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.LightCoordsUtil;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +54,7 @@ public abstract class ArtifactRenderer {
             int light
     ) {
         poseStack.pushPose();
-        if (renderState.entityType == EntityType.PLAYER) {
+        if (BuiltInRegistries.ENTITY_TYPE.getKey(renderState.entityType).getPath().equals("player")) {
             if (!Artifacts.CONFIG.client.showArtifactsOnPlayers.get()) {
                 return;
             }

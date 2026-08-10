@@ -13,7 +13,6 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -46,15 +45,14 @@ public class TrinketsRenderingHandler implements EquipmentRenderingHandler {
             return;
         }
         String groupId = side == player.getMainArm() ? "hand" : "offhand";
-        for (Tuple<TrinketSlotAccess, ItemStack> pair : TrinketsApi.getAttachment(player).getAllEquipped()) {
-            ItemStack stack = pair.getB();
-            if (pair.getA().inventory().slotType().group().equals(groupId)) {
+        TrinketsApi.getAttachment(player).forEach((slotReference, stack) -> {
+            if (slotReference.inventory().slotType().group().equals(groupId)) {
                 GloveArtifactRenderer gloveRenderer = getGloveRenderer(stack);
                 if (gloveRenderer != null) {
                     gloveRenderer.renderFirstPersonArm(poseStack, submitNodeCollector, packedLight, player, side, stack.hasFoil());
                 }
             }
-        }
+        });
     }
 
     public record ArtifactTrinketRenderer(Supplier<ArtifactRenderer> renderer) implements TrinketRenderer {

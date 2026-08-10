@@ -10,7 +10,7 @@ public class ModConsumeEffects {
 
     public static final Register<ConsumeEffect.Type<?>> CONSUME_EFFECT_TYPES = Register.create(Registries.CONSUME_EFFECT_TYPE);
 
-    public static final Holder<ConsumeEffect.Type<?>> DAMAGE_ITEM = CONSUME_EFFECT_TYPES.register("damage_item", () -> new ConsumeEffect.Type<>(DamageItemConsumeEffect.CODEC, DamageItemConsumeEffect.STREAM_CODEC));
-    public static final Holder<ConsumeEffect.Type<?>> HEAL = CONSUME_EFFECT_TYPES.register("heal", () -> new ConsumeEffect.Type<>(HealConsumeEffect.CODEC, HealConsumeEffect.STREAM_CODEC));
+    public static final Holder<ConsumeEffect.Type<?>> DAMAGE_ITEM = CONSUME_EFFECT_TYPES.register("damage_item", () -> new ConsumeEffect.Type<>(DamageItemConsumeEffect.CODEC, DamageItemConsumeEffect.STREAM_CODEC)).holder();
+    public static final Holder<ConsumeEffect.Type<?>> HEAL = CONSUME_EFFECT_TYPES.register("heal", () -> new ConsumeEffect.Type<>(HealConsumeEffect.CODEC, HealConsumeEffect.STREAM_CODEC)).holder();
 
 }

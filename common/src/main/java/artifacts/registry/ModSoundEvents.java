@@ -19,6 +19,6 @@ public class ModSoundEvents {
             WATER_STEP = register("block.water.step");
 
     private static Holder<SoundEvent> register(String name) {
-        return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(Artifacts.id(name)));
+        return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(Artifacts.id(name))).holder();
     }
 }

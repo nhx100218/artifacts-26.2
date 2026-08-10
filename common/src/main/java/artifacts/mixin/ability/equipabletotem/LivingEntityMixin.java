@@ -1,7 +1,6 @@
 package artifacts.mixin.ability.equipabletotem;
 
 import artifacts.component.ability.EquipableTotem;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -38,7 +37,7 @@ public class LivingEntityMixin {
 
             if (self instanceof ServerPlayer serverPlayer) {
                 serverPlayer.awardStat(Stats.ITEM_USED.get(copy.getItem()));
-                CriteriaTriggers.USED_TOTEM.trigger(serverPlayer, copy);
+                triggerUsedTotem(serverPlayer, copy);
                 copy.causeUseVibration(self, GameEvent.ITEM_INTERACT_FINISH);
             }
 
@@ -47,6 +46,22 @@ public class LivingEntityMixin {
             self.level().broadcastEntityEvent(self, EntityEvent.PROTECTED_FROM_DEATH);
 
             cir.setReturnValue(true); // early return intended!
+        }
+    }
+
+    private static void triggerUsedTotem(ServerPlayer serverPlayer, ItemStack copy) {
+        try {
+            Class<?> criteriaTriggers = Class.forName("net.minecraft.advancements.triggers.CriteriaTriggers");
+            Object trigger = criteriaTriggers.getField("USED_TOTEM").get(null);
+            trigger.getClass().getMethod("trigger", ServerPlayer.class, ItemStack.class).invoke(trigger, serverPlayer, copy);
+        } catch (ReflectiveOperationException e) {
+            try {
+                Class<?> criteriaTriggers = Class.forName("net.minecraft.advancements.CriteriaTriggers");
+                Object trigger = criteriaTriggers.getField("USED_TOTEM").get(null);
+                trigger.getClass().getMethod("trigger", ServerPlayer.class, ItemStack.class).invoke(trigger, serverPlayer, copy);
+            } catch (ReflectiveOperationException inner) {
+                throw new IllegalStateException("Unable to trigger used totem criterion", inner);
+            }
         }
     }
 }

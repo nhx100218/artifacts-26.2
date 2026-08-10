@@ -171,7 +171,7 @@ public class ArtifactHooks {
         }
         if (entity instanceof PathfinderMob creeper && creeper.is(ModTags.CREEPERS)) {
             Predicate<LivingEntity> predicate = target -> ModDataComponents.CREEPER_REPELLENT.on(target).findAny();
-            ((MobAccessor) creeper).getGoalSelector().addGoal(3,
+            ((MobAccessor) creeper).artifacts$getGoalSelector().addGoal(3,
                     new AvoidEntityGoal<>(creeper, Player.class, predicate, 6, 1, 1.3, EntitySelector.NO_CREATIVE_OR_SPECTATOR)
             );
         }

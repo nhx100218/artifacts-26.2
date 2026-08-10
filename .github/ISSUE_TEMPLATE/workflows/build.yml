@@ -1,4 +1,3 @@
-# .github/workflows/build.yml
 name: Build Fabric Mod (Java 25)
 
 on:

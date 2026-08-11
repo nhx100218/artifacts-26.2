@@ -2,6 +2,7 @@ package artifacts.registry;
 
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderOwner;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -21,6 +22,12 @@ public class RegistryHolder<R, V extends R> implements Supplier<V> {
     public RegistryHolder(ResourceKey<R> key, Supplier<V> factory) {
         this.key = key;
         this.factory = factory;
+        this.holder = Holder.Reference.createStandAlone(new HolderOwner<>() {
+            @Override
+            public boolean canSerializeIn(HolderOwner<R> holderOwner) {
+                return true;
+            }
+        }, key);
     }
 
     public Supplier<V> getFactory() {
@@ -28,10 +35,20 @@ public class RegistryHolder<R, V extends R> implements Supplier<V> {
     }
 
     public void bind(Holder<R> holder) {
-        if (this.holder != null) {
+        if (this.holder.isBound()) {
             throw new IllegalStateException();
         }
-        this.holder = holder;
+        bindValue(holder.value());
+    }
+
+    private void bindValue(R value) {
+        try {
+            var method = Holder.Reference.class.getDeclaredMethod("bindValue", Object.class);
+            method.setAccessible(true);
+            method.invoke(this.holder, value);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("Unable to bind registry holder", e);
+        }
     }
 
     public Holder<R> holder() {

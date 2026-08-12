@@ -3,7 +3,7 @@ name: Build Fabric Mod (Java 25)
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main", "master", "port/fabric-26.2"]
   pull_request:
     branches: [ "main", "master" ]
   workflow_dispatch:
